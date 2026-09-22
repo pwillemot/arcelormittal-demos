@@ -2428,10 +2428,12 @@ body.embed .req-pane{display:none;}
   /* Screen fills the dynamic viewport height (handles Safari's collapsing toolbar). */
   .phone-screen{width:100% !important;height:100dvh !important;border-radius:0 !important;}
 
-  /* Keep the app's own status bar (time / network / battery) visible in Safari,
-     and push it down below the notch / dynamic island via the safe-area inset. */
-  .m-status-bar{display:flex !important;height:calc(44px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);align-items:flex-end;padding-bottom:8px;}
-  .m-status-bar::before{top:calc(env(safe-area-inset-top) + 6px);}
+  /* Keep the app's own status bar (time / network / battery) visible in Safari
+     as a thin spacer, but drop the fake notch pill — the real iPhone Dynamic
+     Island already sits there, so the pill just makes a redundant black band.
+     Keep it snug to the top. */
+  .m-status-bar{display:flex !important;height:calc(30px + env(safe-area-inset-top));padding-top:calc(env(safe-area-inset-top) - 2px);align-items:flex-end;padding-bottom:5px;}
+  .m-status-bar::before{display:none !important;}
 
   /* The nav's margin-bottom already reserves the home-indicator inset, so the
      pill's internal padding must stay symmetric — otherwise the icons/labels
@@ -2688,7 +2690,7 @@ body.embed .req-pane{display:none;}
       <span class="m-status-time" id="mStatusTime">9:41</span>
       <div class="m-status-icons">
         <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="0.7" fill="#2e2e2e"></rect><rect x="4.5" y="5" width="3" height="6" rx="0.7" fill="#2e2e2e"></rect><rect x="9" y="2.5" width="3" height="8.5" rx="0.7" fill="#2e2e2e"></rect><rect x="13.5" y="0" width="2.5" height="11" rx="0.7" fill="#2e2e2e"></rect></svg>
-        <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" fill="#2e2e2e"></path><path d="M5.2 7.6C6 6.7 7 6.1 8 6.1s2 .6 2.8 1.5" stroke="#2e2e2e" stroke-width="1.3" stroke-linecap="round" fill="none"></path><path d="M2.5 4.8C4 3.1 5.9 2 8 2s4 1.1 5.5 2.8" stroke="#2e2e2e" stroke-width="1.3" stroke-linecap="round" fill="none"></path></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="#2e2e2e"><path d="M8.5 1.2c2.9 0 5.6 1.1 7.6 3 .3.3.3.7 0 1l-.9.9c-.3.3-.7.3-1 0a8 8 0 0 0-11.4 0c-.3.3-.7.3-1 0l-.9-.9c-.3-.3-.3-.7 0-1 2-1.9 4.7-3 7.6-3z"></path><path d="M8.5 5.1c1.6 0 3 .6 4.1 1.6.3.3.3.7 0 1l-.9.9c-.3.3-.7.3-1 0a3.2 3.2 0 0 0-4.4 0c-.3.3-.7.3-1 0l-.9-.9c-.3-.3-.3-.7 0-1a6 6 0 0 1 4.1-1.6z"></path><circle cx="8.5" cy="10.3" r="1.4"></circle></svg>
         <svg width="22" height="11" viewBox="0 0 22 11" fill="none"><rect x="0.5" y="0.5" width="18" height="10" rx="2.3" stroke="#2e2e2e" stroke-width="1.2"></rect><rect x="19.3" y="3" width="2.2" height="5" rx="1" fill="#2e2e2e"></rect><rect x="2" y="1.8" width="14" height="7.4" rx="1.4" fill="#2e2e2e"></rect></svg>
       </div>
     </div>

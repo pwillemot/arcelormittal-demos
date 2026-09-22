@@ -11088,7 +11088,7 @@ function premeetShowGenerating(){
    edit screen with device keyboard → Save prepends to Previous Notes. */
 var _noteVcTimer=null,_noteVcStart=0,_notePendingPhoto=null;
 var NOTE_SPEAK_SAMPLE="Just wrapped the QBR with Elena Vermeulen and Laurent Dubois at the Antwerp site. We covered the FY26 volume recovery, the renewal terms, and the rolling-mill supply risk. On the expansion: Laurent confirmed the four-point-two million euro project is on track for the 10 August go-live, and he expects the volume ramp on structural sections and plate to reach full run-rate by Q4. On the renewal: he's open to a higher commitment tier, but only once we can guarantee mill lead times inside five days — that's his condition.";
-var NOTE_CAPTURE_SAMPLE="Photo of the Antwerpen yard: structural sections staged for the expansion. Storage capacity looks tight ahead of the Aug ramp — flag to procurement for a staging plan.";
+var NOTE_CAPTURE_SAMPLE="Meeting with Elena Vermeulen and Laurent Dubois. Discussed FY26 volume recovery and confirmed the €4.2M expansion project is on track. After the renewal, Laurent is open to a higher commitment tier.";
 function _noteTime(){var d=new Date(),h=d.getHours(),m=d.getMinutes();var ap=h>=12?'PM':'AM';var h12=h%12;if(h12===0)h12=12;return '17 Jul, '+h12+':'+(m<10?'0'+m:m)+' '+ap;}
 function _noteVcShow(which){
   var idle=document.getElementById('noteVoiceIdle'),rec=document.getElementById('noteVoiceRec'),gen=document.getElementById('noteVoiceGen');
@@ -11140,14 +11140,17 @@ function _noteOpenEdit(text,photoUrl,title){
   openFill('noteEditSheet');
   if(ta)setTimeout(function(){ta.focus();},150);
 }
-function noteEditCancel(){closeFill('noteEditSheet');_notePendingPhoto=null;}
+function _noteReleasePhoto(){if(_notePendingPhoto){try{URL.revokeObjectURL(_notePendingPhoto);}catch(e){}}_notePendingPhoto=null;}
+function noteEditCancel(){closeFill('noteEditSheet');_noteReleasePhoto();}
 function noteEditSave(){
   var ta=document.getElementById('noteEditText');
   var text=ta?ta.value.trim():'';
   closeFill('noteEditSheet');
-  if(!text){_notePendingPhoto=null;return;}
-  _notePrepend(text,_notePendingPhoto);
-  _notePendingPhoto=null;
+  /* Photo is reference-only in the review screen — save the note TEXT only,
+     do not embed or persist the captured image. */
+  _noteReleasePhoto();
+  if(!text)return;
+  _notePrepend(text,null);
 }
 function _notePrepend(text,photoUrl){
   var label=document.getElementById('tmNotesTodayLabel')||document.getElementById('notesHistoryTodayLabel');if(!label)return;

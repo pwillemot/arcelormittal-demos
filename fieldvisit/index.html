@@ -1760,6 +1760,15 @@ body.presenter .mfg-annotation{display:none !important;}
 #noteVoiceSheet .mfg-modal-sheet{padding:16px 20px calc(20px + env(safe-area-inset-bottom));}
 .note-vc-gen{display:flex;align-items:center;justify-content:center;gap:12px;padding:24px 6px;}
 .note-vc-gen-txt{font-size:15px;font-weight:600;color:var(--brand-light);}
+/* Review-visit-report sheet — larger, readable, matching buttons */
+#noteEditSheet.mfg-fillsheet.kb .mfg-modal-sheet,#noteEditSheet .mfg-modal-sheet{padding:18px 18px calc(20px + env(safe-area-inset-bottom)) !important;max-height:90% !important;}
+#noteEditTitle{font-size:18px;font-weight:700;}
+.note-edit-text{min-height:300px;font-size:16px;line-height:1.55;padding:14px;border:1px solid var(--border);border-radius:12px;width:100%;resize:none;font-family:var(--font);color:var(--text-primary);}
+.note-edit-actions{display:flex;gap:12px;margin-top:16px;}
+.note-edit-btn{flex:1;padding:15px 16px;border-radius:14px;font-size:16px;font-weight:700;font-family:var(--font);cursor:pointer;border:none;-webkit-tap-highlight-color:transparent;}
+.note-edit-btn.cancel{background:#eef1f5;color:var(--text-secondary);}
+.note-edit-btn.save{background:linear-gradient(135deg,#066afe,#0250d9);color:#fff;box-shadow:0 4px 12px rgba(6,106,254,0.28);}
+.note-edit-btn:active{transform:scale(0.98);}
 #premeetBriefCard.generating .premeet-gen{display:flex;}
 #premeetBriefCard.generating .premeet-brief-body,
 #premeetBriefCard.generating .premeet-play-btn{display:none;}
@@ -6606,10 +6615,10 @@ body.embed .req-pane{display:none;}
           <button class="mfg-fill-trash" style="width:32px;height:32px;border:none;background:none;" type="button" onclick="noteEditCancel()" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
         </div>
         <img id="noteEditPhoto" alt="" style="display:none;width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-bottom:10px;">
-        <textarea class="mfg-fill-textarea" id="noteEditText" style="min-height:120px;"></textarea>
-        <div class="mfg-fill-actions">
-          <button class="mfg-fill-trash" type="button" onclick="noteEditCancel()">Cancel</button>
-          <button class="mfg-fill-apply" type="button" onclick="noteEditSave()">Save note <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></button>
+        <textarea class="mfg-fill-textarea note-edit-text" id="noteEditText"></textarea>
+        <div class="note-edit-actions">
+          <button class="note-edit-btn cancel" type="button" onclick="noteEditCancel()">Cancel</button>
+          <button class="note-edit-btn save" type="button" onclick="noteEditSave()">Save note</button>
         </div>
       </div>
     </div>
@@ -11078,7 +11087,7 @@ function premeetShowGenerating(){
    Flow: idle (tap record) → recording (waves+timer) → transcribing → review &
    edit screen with device keyboard → Save prepends to Previous Notes. */
 var _noteVcTimer=null,_noteVcStart=0,_notePendingPhoto=null;
-var NOTE_SPEAK_SAMPLE="Just wrapped the QBR with Elena Vermeulen and Laurent Dubois at the Antwerp site. We covered the FY26 volume recovery, the renewal terms, and the rolling-mill supply risk. On the expansion: Laurent confirmed the four-point-two million euro project is on track for the 10 August go-live, and he expects the volume ramp on structural sections and plate to reach full run-rate by Q4. On the renewal: he's open to a higher commitment tier, but only once we can guarantee mill lead times inside five days — that's his condition. On the visibility gap: they'll join the Data Cloud forecast-share pilot, though he still wants firm allocation on critical sections during the ramp. And beyond structural steel, Elena flagged genuine interest in coated and rebar volume as the expansion scales. Action items: send the updated lead-time and days-on-hand figures before the QBR close, and set up the forecast-share pilot kickoff for the next visit.";
+var NOTE_SPEAK_SAMPLE="Just wrapped the QBR with Elena Vermeulen and Laurent Dubois at the Antwerp site. We covered the FY26 volume recovery, the renewal terms, and the rolling-mill supply risk. On the expansion: Laurent confirmed the four-point-two million euro project is on track for the 10 August go-live, and he expects the volume ramp on structural sections and plate to reach full run-rate by Q4. On the renewal: he's open to a higher commitment tier, but only once we can guarantee mill lead times inside five days — that's his condition.";
 var NOTE_CAPTURE_SAMPLE="Photo of the Antwerpen yard: structural sections staged for the expansion. Storage capacity looks tight ahead of the Aug ramp — flag to procurement for a staging plan.";
 function _noteTime(){var d=new Date(),h=d.getHours(),m=d.getMinutes();var ap=h>=12?'PM':'AM';var h12=h%12;if(h12===0)h12=12;return '17 Jul, '+h12+':'+(m<10?'0'+m:m)+' '+ap;}
 function _noteVcShow(which){

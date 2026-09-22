@@ -1771,7 +1771,7 @@ body.presenter .mfg-annotation{display:none !important;}
 .note-edit-btn:active{transform:scale(0.98);}
 #premeetBriefCard.generating .premeet-gen{display:flex;}
 #premeetBriefCard.generating .premeet-brief-body,
-#premeetBriefCard.generating .premeet-play-btn{display:none;}
+#premeetBriefCard.generating .premeet-play-mini{display:none;}
 .premeet-brief-body p{margin-bottom:10px;}
 .premeet-brief-body strong{color:var(--brand);}
 .premeet-play-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:14px;padding:13px 16px;border:none;border-radius:12px;background:linear-gradient(135deg,#066afe,#0250d9);color:#fff;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 10px rgba(6,106,254,0.25);}
@@ -2444,7 +2444,7 @@ body.embed .req-pane{display:none;}
      as a thin spacer, but drop the fake notch pill — the real iPhone Dynamic
      Island already sits there, so the pill just makes a redundant black band.
      Keep it snug to the top. */
-  .m-status-bar{display:flex !important;height:calc(env(safe-area-inset-top) + 14px);min-height:44px;padding-top:max(calc(env(safe-area-inset-top) - 12px),4px);padding-bottom:0;align-items:center;}
+  .m-status-bar{display:flex !important;height:max(env(safe-area-inset-top),44px);min-height:0;padding-top:0;padding-bottom:0;align-items:center;}
   .m-status-bar::before{display:none !important;}
 
   /* The nav's margin-bottom already reserves the home-indicator inset, so the

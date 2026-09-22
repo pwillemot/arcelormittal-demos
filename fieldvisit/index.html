@@ -2428,10 +2428,10 @@ body.embed .req-pane{display:none;}
   /* Screen fills the dynamic viewport height (handles Safari's collapsing toolbar). */
   .phone-screen{width:100% !important;height:100dvh !important;border-radius:0 !important;}
 
-  /* The phone's OWN status bar is the only one — hide the app's fake 9:41 strip
-     (prevents a doubled bar) and pad the app bar down past the notch instead. */
-  .m-status-bar{display:none !important;}
-  .m-app-bar{padding-top:env(safe-area-inset-top);height:calc(52px + env(safe-area-inset-top));}
+  /* Keep the app's own status bar (time / network / battery) visible in Safari,
+     and push it down below the notch / dynamic island via the safe-area inset. */
+  .m-status-bar{display:flex !important;height:calc(44px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top);align-items:flex-end;padding-bottom:8px;}
+  .m-status-bar::before{top:calc(env(safe-area-inset-top) + 6px);}
 
   /* The nav's margin-bottom already reserves the home-indicator inset, so the
      pill's internal padding must stay symmetric — otherwise the icons/labels
@@ -8653,10 +8653,12 @@ var NAV_ADDRESSES={
 function openNav(account){
   var name=account||'Destination';
   var dest=NAV_ADDRESSES[name]||name;
-  /* Open the device's maps app with the real address. Google Maps universal URL
-     hands off to the native app on iOS/Android and to the web otherwise. */
-  var url='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(dest);
-  window.open(url,'_blank');
+  /* Google Maps universal URL — hands off to the native Maps app on iOS/Android,
+     web elsewhere. Try a new tab, but fall back to navigating the current tab
+     because iOS Safari blocks window.open popups that aren't user-gesture-clean. */
+  var url='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(dest);
+  var w=window.open(url,'_blank');
+  if(!w||w.closed||typeof w.closed==='undefined'){window.location.href=url;}
 }
 function closeNav(){
   var n=document.getElementById('navFull');

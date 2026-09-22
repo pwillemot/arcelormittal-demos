@@ -2435,7 +2435,7 @@ body.embed .req-pane{display:none;}
      as a thin spacer, but drop the fake notch pill — the real iPhone Dynamic
      Island already sits there, so the pill just makes a redundant black band.
      Keep it snug to the top. */
-  .m-status-bar{display:flex !important;height:calc(30px + env(safe-area-inset-top));padding-top:calc(env(safe-area-inset-top) - 2px);align-items:flex-end;padding-bottom:5px;}
+  .m-status-bar{display:flex !important;height:calc(env(safe-area-inset-top) + 14px);min-height:44px;padding-top:max(calc(env(safe-area-inset-top) - 12px),4px);padding-bottom:0;align-items:center;}
   .m-status-bar::before{display:none !important;}
 
   /* The nav's margin-bottom already reserves the home-indicator inset, so the

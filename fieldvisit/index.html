@@ -1737,6 +1737,9 @@ body.presenter .mfg-annotation{display:none !important;}
 .premeet-brief{margin-top:2px;margin-bottom:16px;}
 .premeet-brief-card{background:linear-gradient(135deg,#f5f8ff 0%,#eef3ff 100%);border:1px solid #cfe0ff;border-radius:16px;box-shadow:0 4px 14px rgba(6,106,254,0.08);padding:18px 16px;}
 .premeet-brief-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.premeet-play-mini{margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:none;border-radius:999px;background:linear-gradient(135deg,#066afe,#0250d9);color:#fff;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;box-shadow:0 2px 6px rgba(6,106,254,0.28);flex-shrink:0;}
+.premeet-play-mini svg{flex-shrink:0;}
+.premeet-play-mini.playing{background:linear-gradient(135deg,#2E844A,#1f6135);}
 .premeet-brief-head .pb-ic{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#066afe,#8383fe);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .premeet-brief-title{font-size:15px;font-weight:700;color:var(--brand);}
 .premeet-brief-body{font-size:14.5px;line-height:1.55;color:var(--text-primary);}
@@ -3378,6 +3381,10 @@ body.embed .req-pane{display:none;}
             <div class="premeet-brief-head">
               <span class="pb-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"></path></svg></span>
               <span class="premeet-brief-title">AI pre-meeting briefing</span>
+              <button class="premeet-play-mini" id="premeetPlayBtn" type="button" onclick="premeetToggleBrief()" aria-label="Play briefing">
+                <svg id="premeetPlayIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                <span id="premeetPlayLabel">Play</span>
+              </button>
             </div>
             <!-- Generating state (shown briefly each time the pre-meeting screen opens) -->
             <div class="premeet-gen" id="premeetGen" aria-hidden="true">
@@ -3398,10 +3405,6 @@ body.embed .req-pane{display:none;}
                 <li style="margin-bottom:0;">Beyond structural steel — is there scope for coated or rebar volume as the expansion scales?</li>
               </ul>
             </div>
-            <button class="premeet-play-btn" id="premeetPlayBtn" type="button" onclick="premeetToggleBrief()">
-              <svg id="premeetPlayIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
-              <span id="premeetPlayLabel">Play briefing</span>
-            </button>
             <audio id="premeetBriefAudio" preload="none" style="display:none;"></audio>
           </div>
         </div>
@@ -11075,7 +11078,7 @@ function premeetShowGenerating(){
    Flow: idle (tap record) → recording (waves+timer) → transcribing → review &
    edit screen with device keyboard → Save prepends to Previous Notes. */
 var _noteVcTimer=null,_noteVcStart=0,_notePendingPhoto=null;
-var NOTE_SPEAK_SAMPLE="Met with Laurent Dubois on the FY26 renewal. He confirmed the structural steel volume expansion is on track for the 10 Aug go-live and is open to a higher commitment tier if we can guarantee mill lead times. Action: send updated lead-time and days-on-hand figures before the QBR close.";
+var NOTE_SPEAK_SAMPLE="Just wrapped the QBR with Elena Vermeulen and Laurent Dubois at the Antwerp site. We covered the FY26 volume recovery, the renewal terms, and the rolling-mill supply risk. On the expansion: Laurent confirmed the four-point-two million euro project is on track for the 10 August go-live, and he expects the volume ramp on structural sections and plate to reach full run-rate by Q4. On the renewal: he's open to a higher commitment tier, but only once we can guarantee mill lead times inside five days — that's his condition. On the visibility gap: they'll join the Data Cloud forecast-share pilot, though he still wants firm allocation on critical sections during the ramp. And beyond structural steel, Elena flagged genuine interest in coated and rebar volume as the expansion scales. Action items: send the updated lead-time and days-on-hand figures before the QBR close, and set up the forecast-share pilot kickoff for the next visit.";
 var NOTE_CAPTURE_SAMPLE="Photo of the Antwerpen yard: structural sections staged for the expansion. Storage capacity looks tight ahead of the Aug ramp — flag to procurement for a staging plan.";
 function _noteTime(){var d=new Date(),h=d.getHours(),m=d.getMinutes();var ap=h>=12?'PM':'AM';var h12=h%12;if(h12===0)h12=12;return '17 Jul, '+h12+':'+(m<10?'0'+m:m)+' '+ap;}
 function _noteVcShow(which){
@@ -11155,7 +11158,7 @@ function _notePrepend(text,photoUrl){
    browser's speech synthesis reading the on-screen briefing text. */
 var PREMEET_AUDIO_SRC = ""; /* e.g. "assets/pre-meeting-briefing.m4a" — set when you drop the file in */
 function premeetSetLabel(t){var l=document.getElementById("premeetPlayLabel");if(l)l.textContent=t;}
-function premeetSetPlaying(on){var b=document.getElementById("premeetPlayBtn");if(b)b.classList.toggle("playing",!!on);premeetSetLabel(on?"Stop briefing":"Play briefing");var ic=document.getElementById("premeetPlayIcon");if(ic)ic.innerHTML=on?'<rect x="6" y="6" width="12" height="12" rx="1.5"></rect>':'<path d="M8 5v14l11-7z"></path>';}
+function premeetSetPlaying(on){var b=document.getElementById("premeetPlayBtn");if(b)b.classList.toggle("playing",!!on);premeetSetLabel(on?"Stop":"Play");var ic=document.getElementById("premeetPlayIcon");if(ic)ic.innerHTML=on?'<rect x="6" y="6" width="12" height="12" rx="1.5"></rect>':'<path d="M8 5v14l11-7z"></path>';}
 function premeetStop(){var a=document.getElementById("premeetBriefAudio");if(a){a.pause();try{a.currentTime=0;}catch(e){}}if(window.speechSynthesis)window.speechSynthesis.cancel();premeetSetPlaying(false);}
 function premeetToggleBrief(){
   var b=document.getElementById("premeetPlayBtn");

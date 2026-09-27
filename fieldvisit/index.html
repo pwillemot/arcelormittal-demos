@@ -1370,6 +1370,12 @@ body.presenter .mfg-annotation{display:none !important;}
 .c360fig-task-body{display:flex;flex-direction:column;gap:4px;}
 .c360fig-task-title{font-size:14px;font-weight:590;color:#1e293b;line-height:19px;}
 .c360fig-task-due{font-size:12px;font-weight:400;color:#5c5c5c;line-height:17px;}
+/* ---- Tasks section (under the contact card) ---- */
+.c360fig-tasks{display:flex;flex-direction:column;gap:12px;}
+.c360fig-tasks-empty{font-size:13px;font-weight:400;color:#8a8a8a;line-height:18px;padding:2px 0;}
+.c360fig-task.is-new{animation:c360TaskIn 0.35s ease;}
+.c360fig-task-due.due-flag{color:#066afe;font-weight:600;}
+@keyframes c360TaskIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
 /* ---- Key Contacts page ---- */
 .c360fig-topnav{background:#edf4ff;padding:16px;font-size:16px;font-weight:590;color:#2e2e2e;flex-shrink:0;}
 #screen-c360contacts .mfg-c360-section{display:flex;flex-direction:column;gap:12px;padding-top:12px;}
@@ -3525,6 +3531,12 @@ body.embed .req-pane{display:none;}
           </div>
           <div class="c360fig-viewmore c360-cur-viewmore" role="button" tabindex="0" onclick="tmOpenC360('c360contacts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>View more</div>
         </div>
+        <div class="c360fig-card">
+          <div class="c360fig-sec">TASKS</div>
+          <div class="c360fig-tasks" id="tmC360TasksList">
+            <div class="c360fig-tasks-empty" id="tmC360TasksEmpty">No open tasks.</div>
+          </div>
+        </div>
         <div class="c360fig-lvs">
           <div class="c360fig-lvs-head">
             <div class="c360fig-sec">LAST VISIT SUMMARY</div>
@@ -4333,6 +4345,12 @@ body.embed .req-pane{display:none;}
             <div class="c360fig-cbtns"><a class="c360fig-cbtn call" href="tel:+3234561001" aria-label="Call Laurent Dubois"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></a><a class="c360fig-cbtn msg" href="sms:+3234561001" aria-label="Message Laurent Dubois"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></a></div>
           </div>
           <div class="c360fig-viewmore c360-cur-viewmore" role="button" tabindex="0" onclick="showScreen('c360contacts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>View more</div>
+        </div>
+        <div class="c360fig-card">
+          <div class="c360fig-sec">TASKS</div>
+          <div class="c360fig-tasks" id="c360TasksList">
+            <div class="c360fig-tasks-empty" id="c360TasksEmpty">No open tasks.</div>
+          </div>
         </div>
         <div class="c360fig-lvs">
           <div class="c360fig-lvs-head">
@@ -11087,7 +11105,10 @@ function premeetShowGenerating(){
    Flow: idle (tap record) → recording (waves+timer) → transcribing → review &
    edit screen with device keyboard → Save prepends to Previous Notes. */
 var _noteVcTimer=null,_noteVcStart=0,_notePendingPhoto=null;
-var NOTE_SPEAK_SAMPLE="Just wrapped the QBR with Elena Vermeulen and Laurent Dubois at the Antwerp site. We covered the FY26 volume recovery, the renewal terms, and the rolling-mill supply risk. On the expansion: Laurent confirmed the four-point-two million euro project is on track for the 10 August go-live, and he expects the volume ramp on structural sections and plate to reach full run-rate by Q4. On the renewal: he's open to a higher commitment tier, but only once we can guarantee mill lead times inside five days — that's his condition.";
+var NOTE_SPEAK_SAMPLE="Just wrapped the QBR with Elena Vermeulen and Laurent Dubois at the Antwerp site. We covered the FY26 volume recovery, the renewal terms, and the rolling-mill supply risk. On the expansion: Laurent confirmed the four-point-two million euro project is on track for the 10 August go-live, and he expects the volume ramp on structural sections and plate to reach full run-rate by Q4. On the renewal: he's open to a higher commitment tier, but only once we can guarantee mill lead times inside five days — that's his condition. And create me a task to follow up on the 4.2 million project by end of tomorrow.";
+/* Phrase that triggers task creation from a saved voice note, and the task it makes. */
+var NOTE_TASK_TRIGGER=/create (me )?a task|follow[ -]?up on the (4\.?2|four[ -]point[ -]two)/i;
+var NOTE_TASK_TITLE="Follow up on the €4.2M expansion project";
 var NOTE_CAPTURE_SAMPLE="Meeting with Elena Vermeulen and Laurent Dubois. Discussed FY26 volume recovery and confirmed the €4.2M expansion project is on track. After the renewal, Laurent is open to a higher commitment tier.";
 function _noteTime(){var d=new Date(),h=d.getHours(),m=d.getMinutes();var ap=h>=12?'PM':'AM';var h12=h%12;if(h12===0)h12=12;return '17 Jul, '+h12+':'+(m<10?'0'+m:m)+' '+ap;}
 function _noteVcShow(which){
@@ -11151,6 +11172,35 @@ function noteEditSave(){
   _noteReleasePhoto();
   if(!text)return;
   _notePrepend(text,null);
+  /* If the note asks for a follow-up task, create it on the account (due tomorrow). */
+  if(NOTE_TASK_TRIGGER.test(text))c360AddTaskFromNote();
+}
+/* Short date like "27 Sep 2026" for task due dates. */
+function _c360FmtDate(d){
+  var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate()+' '+mo[d.getMonth()]+' '+d.getFullYear();
+}
+/* Build a task card and prepend it into both Account 360 Tasks lists. Created
+   today; due end of tomorrow (current date + 1 day). */
+function c360AddTaskFromNote(){
+  var now=new Date();
+  var due=new Date(now.getTime()+86400000);
+  var createdStr=_c360FmtDate(now), dueStr=_c360FmtDate(due);
+  ['c360TasksList','tmC360TasksList'].forEach(function(listId){
+    var list=document.getElementById(listId);if(!list)return;
+    var empty=list.querySelector('.c360fig-tasks-empty');if(empty)empty.remove();
+    var card=document.createElement('div');
+    card.className='c360fig-task is-new';
+    card.setAttribute('role','button');card.setAttribute('tabindex','0');
+    card.onclick=function(){c360OpenActionItem(NOTE_TASK_TITLE,'Created '+createdStr+' from your visit note — due '+dueStr+'.');};
+    card.innerHTML='<div class="c360fig-task-status" style="color:#fe9339;">Open</div>'
+      +'<div class="c360fig-task-body">'
+      +'<div class="c360fig-task-title">'+NOTE_TASK_TITLE+'</div>'
+      +'<div class="c360fig-task-due due-flag">Due '+dueStr+' (end of tomorrow) · created '+createdStr+'</div>'
+      +'</div>';
+    list.insertBefore(card,list.firstChild);
+  });
+  if(typeof showToast==='function')showToast('Task created',NOTE_TASK_TITLE+' — due '+dueStr+'.','');
 }
 function _notePrepend(text,photoUrl){
   var label=document.getElementById('tmNotesTodayLabel')||document.getElementById('notesHistoryTodayLabel');if(!label)return;
